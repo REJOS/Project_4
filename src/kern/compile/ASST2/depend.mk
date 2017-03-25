@@ -279,6 +279,11 @@ thread.o: ../../thread/thread.c ../../include/types.h machine/types.h \
   machine/pcb.h ../../include/thread.h ../../include/curthread.h \
   ../../include/scheduler.h ../../include/addrspace.h ../../include/vm.h \
   machine/vm.h opt-dumbvm.h ../../include/vnode.h opt-synchprobs.h
+pid.o: ../../thread/pid.c ../../include/types.h machine/types.h \
+  ../../include/kern/types.h ../../include/lib.h machine/setjmp.h \
+  ../../include/kern/errno.h ../../include/array.h \
+  ../../include/syscall.h ../../include/thread.h machine/pcb.h \
+  ../../include/curthread.h ../../include/synch.h
 main.o: ../../main/main.c ../../include/types.h machine/types.h \
   ../../include/kern/types.h ../../include/kern/errno.h \
   ../../include/kern/unistd.h ../../include/lib.h machine/setjmp.h \

@@ -9,6 +9,20 @@
 
 
 
+void _exit(int code) {
+
+
+
+}
+
+
+int execv(const char *prog, char *const *args) {
+
+
+	return 0;
+}
+
+
 int sys_fork(struct trapframe *tf, pid_t *retval) {
 
 	int result;
@@ -41,6 +55,13 @@ int sys_fork(struct trapframe *tf, pid_t *retval) {
 	}
 
 	*retval = new_thread->t_pid;
+
+	return 0;
+}
+
+
+int waitpid(pid_t pid, int *returncode, int flags) {
+
 
 	return 0;
 }
