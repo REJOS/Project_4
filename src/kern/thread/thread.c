@@ -86,6 +86,12 @@ thread_destroy(struct thread *thread)
 	assert(thread->t_vmspace==NULL);
 	assert(thread->t_cwd==NULL);
 	
+	int result = pid_destroy(curthread->t_pid);
+
+	if (result) {
+		panic("thread_destroy: pid not found\n");
+	}
+
 	if (thread->t_stack) {
 		kfree(thread->t_stack);
 	}
@@ -258,7 +264,7 @@ thread_fork(const char *name,
 	if (newguy==NULL) {
 		return ENOMEM;
 	}
-/*
+
 	pid_t *npid;
 
 	result = pid_create(npid, curthread->t_pid, 0);
@@ -268,7 +274,7 @@ thread_fork(const char *name,
 	}
 
 	newguy->t_pid = *npid;
-*/
+
 	/* Allocate a stack */
 	newguy->t_stack = kmalloc(STACK_SIZE);
 	if (newguy->t_stack==NULL) {
@@ -484,13 +490,9 @@ thread_exit(void)
 		VOP_DECREF(curthread->t_cwd);
 		curthread->t_cwd = NULL;
 	}
-/*
-	int result = pid_destroy(curthread->t_pid);
 
-	if (result) {
-		panic("thread_destroy: pid not found\n");
-	}
-*/
+	pid_sethasexited(curthread->t_pid, 1);
+
 	assert(numthreads>0);
 	numthreads--;
 	mi_switch(S_ZOMB);

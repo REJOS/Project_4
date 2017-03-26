@@ -66,7 +66,9 @@ int pid_get(pid_t gpid, pid_t *ppid, int *status, int *hasexited);
 
 int pid_wait(pid_t wpid, int *status, int flags, pid_t *ret);
 
-int pid_setexitstatus(pid_t spid, int status, int hasexited);
+int pid_setexitstatus(pid_t spid, int status);
+
+int pid_sethasexited(pid_t spid, int hasexited);
 
 /* Call once during startup to allocate data structures. */
 struct thread *thread_bootstrap(void);

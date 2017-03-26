@@ -28,13 +28,14 @@ int pid_initialize(void) {
 	}
 
 	return 0;
+
 }
 
 int pid_create(pid_t *retval, pid_t ppid, int status) {
 
 	assert(ppid >= 0);
 
-	lock_acquire(pidlock);
+	//lock_acquire(pidlock);
 
 	struct pidinfo *new_info = kmalloc(sizeof(struct pidinfo));
 	if (new_info == NULL) {
@@ -65,14 +66,14 @@ int pid_create(pid_t *retval, pid_t ppid, int status) {
 
 	nextpid++;
 
-	lock_release(pidlock);
+	//lock_release(pidlock);
 
 	return 0;
 }
 
 int pid_destroy(pid_t dpid) {
 
-	lock_acquire(pidlock);
+	//lock_acquire(pidlock);
 
 	int *i;
 
@@ -91,14 +92,14 @@ int pid_destroy(pid_t dpid) {
 
 	array_remove(pidinfoTable, *i);
 
-	lock_release(pidlock);
+	//lock_release(pidlock);
 
 	return 0;
 }
 
 int pid_get(pid_t gpid, pid_t *ppid, int *status, int *hasexited) {
 
-	lock_acquire(pidlock);
+	//lock_acquire(pidlock);
 
 	int *i;
 
@@ -116,7 +117,7 @@ int pid_get(pid_t gpid, pid_t *ppid, int *status, int *hasexited) {
 
 	*hasexited = cur_pidinfo->hasexited;
 
-	lock_release(pidlock);
+	//lock_release(pidlock);
 
 	return 0;
 }
@@ -135,7 +136,7 @@ int pid_wait(pid_t wpid, int *status, int flags, pid_t *ret) {
 		return EFAULT;
 	}
 
-	lock_acquire(pidlock);
+	//lock_acquire(pidlock);
 
 	int *i;
 
@@ -159,14 +160,14 @@ int pid_wait(pid_t wpid, int *status, int flags, pid_t *ret) {
 	*status = cur_pidinfo->exitstatus;
 	*ret = wpid;
 
-	lock_release(pidlock);
+	//lock_release(pidlock);
 
 	return 0;
 }
 
-int pid_setexitstatus(pid_t spid, int status, int hasexited) {
+int pid_setexitstatus(pid_t spid, int status) {
 
-	lock_acquire(pidlock);
+	//lock_acquire(pidlock);
 
 	int *i;
 
@@ -180,13 +181,32 @@ int pid_setexitstatus(pid_t spid, int status, int hasexited) {
 
 	cur_pidinfo->exitstatus = status;
 
+	//lock_release(pidlock);
+
+	return 0;
+}
+
+int pid_sethasexited(pid_t spid, int hasexited) {
+
+	//lock_acquire(pidlock);
+
+	int *i;
+
+	int result = findpidindex(spid, i);
+
+	if (result) {
+		return result;
+	}
+
+	struct pidinfo *cur_pidinfo = array_getguy(pidinfoTable, *i);
+
 	cur_pidinfo->hasexited = hasexited;
 
 	if (hasexited)	{
 		cv_broadcast(cur_pidinfo->exitcv, pidlock);
 	}
 
-	lock_release(pidlock);
+	//lock_release(pidlock);
 
 	return 0;
 }

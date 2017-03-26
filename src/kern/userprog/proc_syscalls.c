@@ -9,14 +9,17 @@
 
 
 
-void _exit(int code) {
+void sys__exit(int code) {
 
+	pid_setexitstatus(curthread->t_pid, code);
 
+	thread_exit();
 
 }
 
 
-int execv(const char *prog, char *const *args) {
+int sys_execv(const char *prog, char *const *args) {
+
 
 
 	return 0;
@@ -60,8 +63,11 @@ int sys_fork(struct trapframe *tf, pid_t *retval) {
 }
 
 
-int waitpid(pid_t pid, int *returncode, int flags) {
+int sys_waitpid(pid_t pid, int *returncode, int flags) {
 
+	pid_t *retval;
+
+	*returncode = pid_wait(pid, returncode, flags, retval);
 
 	return 0;
 }
