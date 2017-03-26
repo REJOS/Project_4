@@ -5,7 +5,7 @@
 #include <curthread.h>
 #include <addrspace.h>
 #include <kern/errno.h>
-#include <../arch/mips/include/trapframe.h>
+#include <machine/trapframe.h>
 
 
 
@@ -43,7 +43,7 @@ int sys_fork(struct trapframe *tf, pid_t *retval) {
 	}
 
 	/* Call thread_fork(	) */
-	result = thread_fork(curthread->t_name, new_tf, 0, new_addr, new_thread);
+	result = thread_fork(curthread->t_name, new_tf, 0, (unsigned long)new_addr, &new_thread);
 
 	if (result != 0) { /* failed in thread_fork */
 	    kfree(new_tf);

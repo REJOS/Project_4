@@ -62,6 +62,8 @@ thread_create(const char *name)
 	// If you add things to the thread structure, be sure to initialize
 	// them here.
 	
+	thread->t_pid = 0;
+
 	return thread;
 }
 
@@ -182,6 +184,8 @@ thread_bootstrap(void)
 		panic("Cannot create zombies array\n");
 	}
 	
+	pid_initialize();
+
 	/*
 	 * Create the thread structure for the first thread
 	 * (the one that's already running)
@@ -190,6 +194,18 @@ thread_bootstrap(void)
 	if (me==NULL) {
 		panic("thread_bootstrap: Out of memory\n");
 	}
+
+	pid_t *npid;
+
+	int result;
+
+	result = pid_create(npid, 0, 0);
+
+	if (result) {
+		panic("thread_bootstrap: Could not assign pid\n");
+	}
+
+	me->t_pid = *npid;
 
 	/*
 	 * Leave me->t_stack NULL. This means we're using the boot stack,
@@ -242,7 +258,17 @@ thread_fork(const char *name,
 	if (newguy==NULL) {
 		return ENOMEM;
 	}
+/*
+	pid_t *npid;
 
+	result = pid_create(npid, curthread->t_pid, 0);
+
+	if (result) {
+		goto fail;
+	}
+
+	newguy->t_pid = *npid;
+*/
 	/* Allocate a stack */
 	newguy->t_stack = kmalloc(STACK_SIZE);
 	if (newguy->t_stack==NULL) {
@@ -458,7 +484,13 @@ thread_exit(void)
 		VOP_DECREF(curthread->t_cwd);
 		curthread->t_cwd = NULL;
 	}
+/*
+	int result = pid_destroy(curthread->t_pid);
 
+	if (result) {
+		panic("thread_destroy: pid not found\n");
+	}
+*/
 	assert(numthreads>0);
 	numthreads--;
 	mi_switch(S_ZOMB);

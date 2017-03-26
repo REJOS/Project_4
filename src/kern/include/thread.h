@@ -50,6 +50,7 @@ struct pidinfo {
 
 	pid_t pid;
 	pid_t parent_pid;
+	int hasexited;
 	int exitstatus;
 	struct cv *exitcv;
 
@@ -61,11 +62,11 @@ int pid_create(pid_t *retval, pid_t ppid, int status);
 
 int pid_destroy(pid_t dpid);
 
-int pid_get(pid_t gpid, pid_t *ppid, int *status);
+int pid_get(pid_t gpid, pid_t *ppid, int *status, int *hasexited);
 
 int pid_wait(pid_t wpid, int *status, int flags, pid_t *ret);
 
-int pid_setexitstatus(pid_t spid, int status);
+int pid_setexitstatus(pid_t spid, int status, int hasexited);
 
 /* Call once during startup to allocate data structures. */
 struct thread *thread_bootstrap(void);

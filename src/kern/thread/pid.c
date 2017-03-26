@@ -18,7 +18,7 @@ int findpidindex(pid_t pid, int *retval);
 
 int pid_initialize(void) {
 
-	nextpid = 0;
+	nextpid = 1;
 
 	pidlock = lock_create("pid lock");
 
@@ -47,6 +47,8 @@ int pid_create(pid_t *retval, pid_t ppid, int status) {
 
 	new_info->parent_pid = ppid;
 
+	new_info->hasexited = 0;
+
 	new_info->exitstatus = status;
 
 	new_info->exitcv = cv_create("exitstatus cv");
@@ -56,7 +58,7 @@ int pid_create(pid_t *retval, pid_t ppid, int status) {
 	if (result) {
 		kfree(new_info);
 		new_info = NULL;
-		return -2;
+		return result;
 	}
 
 	*retval = nextpid;
@@ -94,7 +96,7 @@ int pid_destroy(pid_t dpid) {
 	return 0;
 }
 
-int pid_get(pid_t gpid, pid_t *ppid, int *status) {
+int pid_get(pid_t gpid, pid_t *ppid, int *status, int *hasexited) {
 
 	lock_acquire(pidlock);
 
@@ -111,6 +113,8 @@ int pid_get(pid_t gpid, pid_t *ppid, int *status) {
 	*ppid = cur_pidinfo->parent_pid;
 
 	*status = cur_pidinfo->exitstatus;
+
+	*hasexited = cur_pidinfo->hasexited;
 
 	lock_release(pidlock);
 
@@ -148,7 +152,7 @@ int pid_wait(pid_t wpid, int *status, int flags, pid_t *ret) {
 		return EINVAL;
 	}
 
-	if (cur_pidinfo->exitstatus != 0) {
+	if (!cur_pidinfo->hasexited) {
 		cv_wait(cur_pidinfo->exitcv, pidlock);
 	}
 
@@ -160,7 +164,7 @@ int pid_wait(pid_t wpid, int *status, int flags, pid_t *ret) {
 	return 0;
 }
 
-int pid_setexitstatus(pid_t spid, int status) {
+int pid_setexitstatus(pid_t spid, int status, int hasexited) {
 
 	lock_acquire(pidlock);
 
@@ -176,7 +180,9 @@ int pid_setexitstatus(pid_t spid, int status) {
 
 	cur_pidinfo->exitstatus = status;
 
-	if (status)	{
+	cur_pidinfo->hasexited = hasexited;
+
+	if (hasexited)	{
 		cv_broadcast(cur_pidinfo->exitcv, pidlock);
 	}
 
