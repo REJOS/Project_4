@@ -12,6 +12,7 @@
 #include <scheduler.h>
 #include <addrspace.h>
 #include <vnode.h>
+#include <syscall.h>
 #include "opt-synchprobs.h"
 
 /* States a thread can be in. */
@@ -177,6 +178,10 @@ thread_panic(void)
 struct thread *
 thread_bootstrap(void)
 {
+
+	init_argdata();
+
+
 	struct thread *me;
 
 	/* Create the data structures we need. */

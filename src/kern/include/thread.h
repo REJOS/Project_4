@@ -7,6 +7,7 @@
 
 /* Get machine-dependent stuff */
 #include <machine/pcb.h>
+#include <syscall.h>;
 
 
 struct addrspace;
