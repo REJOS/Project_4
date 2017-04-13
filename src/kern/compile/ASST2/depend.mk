@@ -291,6 +291,7 @@ pid.o: ../../thread/pid.c ../../include/types.h machine/types.h \
   ../../include/kern/errno.h ../../include/array.h \
   ../../include/syscall.h machine/trapframe.h ../../include/thread.h \
   machine/pcb.h ../../include/curthread.h ../../include/synch.h
+file.o: ../../thread/file.c
 main.o: ../../main/main.c ../../include/types.h machine/types.h \
   ../../include/kern/types.h ../../include/kern/errno.h \
   ../../include/kern/unistd.h ../../include/lib.h machine/setjmp.h \

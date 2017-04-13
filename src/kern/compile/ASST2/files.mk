@@ -379,6 +379,11 @@ pid.o: ${S}/thread/pid.c
 SRCS+=${S}/thread/pid.c
 OBJS+=pid.o
 
+file.o: ${S}/thread/file.c
+	${COMPILE.c} ${S}/thread/file.c
+SRCS+=${S}/thread/file.c
+OBJS+=file.o
+
 main.o: ${S}/main/main.c
 	${COMPILE.c} ${S}/main/main.c
 SRCS+=${S}/main/main.c

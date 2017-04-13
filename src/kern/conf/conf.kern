@@ -366,6 +366,7 @@ file      thread/synch.c
 file      thread/scheduler.c
 file      thread/thread.c
 file      thread/pid.c
+file      thread/file.c
 
 #
 # Main/toplevel stuff

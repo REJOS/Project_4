@@ -45,6 +45,12 @@ struct thread {
 	 */
 	pid_t t_pid;
 
+	/*
+	 * Sample: This is public because it isn't part of the thread system;
+	 * it needs to be manipulated by the userprog code.
+	 */
+	struct filetable *t_filetable;
+
 };
 
 struct pidinfo {

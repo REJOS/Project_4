@@ -66,6 +66,10 @@ int pid_create(pid_t *retval, pid_t ppid, int status) {
 
 	nextpid++;
 
+	if (nextpid == 2147483647) {
+		nextpid = 1;
+	}
+
 	//lock_release(pidlock);
 
 	return 0;
