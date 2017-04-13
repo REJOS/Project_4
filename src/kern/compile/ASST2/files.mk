@@ -404,6 +404,11 @@ proc_syscalls.o: ${S}/userprog/proc_syscalls.c
 SRCS+=${S}/userprog/proc_syscalls.c
 OBJS+=proc_syscalls.o
 
+file_syscalls.o: ${S}/userprog/file_syscalls.c
+	${COMPILE.c} ${S}/userprog/file_syscalls.c
+SRCS+=${S}/userprog/file_syscalls.c
+OBJS+=file_syscalls.o
+
 loadelf.o: ${S}/userprog/loadelf.c
 	${COMPILE.c} ${S}/userprog/loadelf.c
 SRCS+=${S}/userprog/loadelf.c

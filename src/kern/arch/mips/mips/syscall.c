@@ -92,11 +92,36 @@ mips_syscall(struct trapframe *tf)
 	    sys__exit(tf->tf_a0);
 	    err = 0;
 	    break;
+		/*
+		case SYS_open:
+	    err = sys_open(const char *path, int oflag, mode_t mode);
+	    break;
 
+	    case SYS_read:
+	    err = sys_read(int fd, void *buf, size_t nbytes);
+	    break;
+
+	    case SYS_write:
+	    err = sys_write(int fd, const void *buf, size_t nbytes);
+	    break;
+
+	    case SYS_lseek:
+	    err = sys_lseek(int fd, off_t offset, int whence);
+	    break;
+
+	    case SYS_close:
+	    err = sys_close(int fd);
+	    break;
+
+	    case SYS_dup2file:
+	    err = sys_dup2file(int oldfd, int newfd);
+	    break;
+		 */
 	    default:
 		kprintf("Unknown syscall %d\n", callno);
 		err = ENOSYS;
 		break;
+
 	}
 
 

@@ -8,6 +8,7 @@
 #define _FILE_H_
 
 #include <kern/limits.h>
+#include <types.h>
 
 struct lock;
 struct vnode;

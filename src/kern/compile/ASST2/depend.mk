@@ -321,6 +321,13 @@ proc_syscalls.o: ../../userprog/proc_syscalls.c ../../include/types.h \
   ../../include/kern/errno.h ../../include/kern/unistd.h \
   ../../include/kern/limits.h ../../include/vfs.h ../../include/test.h \
   ../../include/synch.h
+file_syscalls.o: ../../userprog/file_syscalls.c ../../include/file.h \
+  ../../include/kern/limits.h ../../include/types.h machine/types.h \
+  ../../include/kern/types.h ../../include/lib.h machine/setjmp.h \
+  ../../include/syscall.h machine/trapframe.h ../../include/thread.h \
+  machine/pcb.h ../../include/curthread.h ../../include/addrspace.h \
+  ../../include/vm.h machine/vm.h opt-dumbvm.h ../../include/kern/errno.h \
+  ../../include/kern/unistd.h ../../include/vfs.h
 loadelf.o: ../../userprog/loadelf.c ../../include/types.h machine/types.h \
   ../../include/kern/types.h ../../include/kern/errno.h \
   ../../include/lib.h machine/setjmp.h ../../include/uio.h \

@@ -383,6 +383,7 @@ file      main/menu.c
 
 file      userprog/getpid_syscall.c
 file      userprog/proc_syscalls.c
+file      userprog/file_syscalls.c
 file      userprog/loadelf.c
 file      userprog/runprogram.c
 file      userprog/uio.c
