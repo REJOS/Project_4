@@ -15,5 +15,7 @@
 
 #define PID_MAX    2147483647
 
+#define OPEN_MAX   10
+
 
 #endif /* _KERN_LIMITS_H_ */
