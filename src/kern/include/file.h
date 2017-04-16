@@ -13,8 +13,6 @@
 struct lock;
 struct vnode;
 
-const int OPEN_MAX = 100;
-
 /*** openfile section ***/
 
 /* 
