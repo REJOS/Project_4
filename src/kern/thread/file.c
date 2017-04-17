@@ -16,7 +16,6 @@
 #include <kern/stat.h>
 
 int file_open(char *filename, int flags, int *retfd) {
-
 	int result = 0;
 	struct vnode *vn;
 	char *kbuf;
@@ -148,9 +147,33 @@ int filetable_findfile(int fd, struct openfile **file) {
 
 
 int filetable_dup2file(int oldfd, int newfd) {
-
-
-
+	int result = 0;
+	if(oldfd >= OPEN_MAX || oldfd < 0 || newfd >= OPEN_MAX || newfd < 0){
+		return EBADF;
+	}
+	if(oldfd == newfd){
+		return 0;
+	}
+	struct openfile **fileO;
+	filetable_findile(oldfd,fileO);
+	if(*fileO == NULL){
+		return EBADF;
+	}
+	struct openfile **fileN;
+	filetable_findile(oldfd,fileN);
+	if(fileN != NULL){
+		result = filetable_close(newfd);
+		if(result){
+			return EBADF;
+		}
+	}
+	lock_acquire((*fileO)->of_lock);
+	(*fileN)->of_vnode = (*fileO)->of_vnode;
+	(*fileN)->of_offset = (*fileO)->of_offset;
+	(*fileN)->of_accmode = (*fileO)->of_accmode;
+	(*fileN)->of_refcount = (*fileO)->of_refcount;
+	(*fileN)->of_lock = lock_create("DUP2");
+	lock_release((*fileO)->of_lock);
 	return 0;
 }
 
