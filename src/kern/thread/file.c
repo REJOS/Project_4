@@ -15,7 +15,7 @@
 #include <synch.h>
 #include <kern/stat.h>
 
-int file_open(char *filename, int flags, int mode, int *retfd) {
+int file_open(char *filename, int flags, int *retfd) {
 
 
 
