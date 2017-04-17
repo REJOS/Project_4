@@ -15,18 +15,60 @@
 #include <synch.h>
 #include <kern/stat.h>
 
-int file_open(char *filename, int flags, int mode, int *retfd) {
+int file_open(char *filename, int flags, int *retfd) {
+	int result = 0;
+	struct vnode *vn;
+	char *kbuf;
+	size_t len;
+	kbuf = (char *) kmalloc(sizeof(char)*PATH_MAX);
+	result = copyinstr((const_userptr_t)filename,kbuf,PATH_MAX,&len);
+	if(result){
+		kfree(kbuf);
+		return result;
+	}
+	struct openfile **file;
+	(*file)->of_vnode = vn;
+	(*file)->of_refcount = 1;
+	(*file)->of_offset = 0;
+	(*file)->of_lock = lock_create(kbuf);
 
+	result = vfs_open(kbuf,flags,0,&vn);
+		if(result) {
+			kfree(kbuf);
+			kfree(*file);
+			return result;
+		}
 
+	kfree(kbuf);
+	return filetable_placefile(*file, retfd);
 
-	return 0;
 }
 
 
 int file_close(int fd) {
 
+	struct openfile **file;
+	filetable_findfile(fd, file);
 
+	if(fd >= OPEN_MAX || fd < 0){
+		return EBADF;
+	}
 
+	if(*file == NULL){
+		return EBADF;
+	}
+
+	if((*file)->of_vnode == NULL){
+		return EBADF;
+	}
+
+	if((*file)->of_refcount == 1){
+		VOP_CLOSE((*file)->of_vnode);
+		lock_destroy((*file)->of_lock);
+		kfree(*file);
+	}else{
+		(*file)->of_refcount -= 1;
+	}
 	return 0;
 }
 
