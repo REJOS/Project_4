@@ -33,7 +33,7 @@ int file_open(char *filename, int flags, int *retfd) {
 	(*file)->of_offset = 0;
 	(*file)->of_lock = lock_create(kbuf);
 
-	result = vfs_open(kbuf,flags,0,&vn);
+	result = vfs_open(kbuf,flags,&vn);
 	if(result) {
 		kfree(kbuf);
 		kfree(*file);
@@ -74,17 +74,17 @@ int file_close(int fd) {
 }
 
 
-int filetable_init(const char *inpath, const char *outpath, const char *errpath) {
+int filetable_init(struct filetable *ft) {
 
-	curthread->t_filetable = kmalloc(sizeof(struct filetable));
+	ft = kmalloc(sizeof(struct filetable));
 
-	if (curthread->t_filetable == NULL) {
+	if (ft == NULL) {
 		return ENOMEM;
 	}
 
 	int i;
 	for (i = 0; i < OPEN_MAX; i++) {
-		curthread->t_filetable->ft_openfiles[i] = NULL;
+		ft->ft_openfiles[i] = NULL;
 	}
 
 	return 0;
@@ -93,7 +93,27 @@ int filetable_init(const char *inpath, const char *outpath, const char *errpath)
 
 int filetable_copy(struct filetable **copy) {
 
+	int result;
 
+	result = filetable_init(*copy);
+
+	if (result) {
+		return result;
+	}
+
+	int i;
+	for (i = 0; i < OPEN_MAX; i++) {
+		if (curthread->t_filetable->ft_openfiles[i] != NULL) {
+			(*copy)->ft_openfiles[i] = kmalloc(sizeof(struct openfile));
+			if ((*copy)->ft_openfiles[i] == NULL) {
+				return ENOMEM;
+			}
+			(*copy)->ft_openfiles[i]->of_vnode = curthread->t_filetable->ft_openfiles[i]->of_vnode;
+			(*copy)->ft_openfiles[i]->of_lock = curthread->t_filetable->ft_openfiles[i]->of_lock;
+			(*copy)->ft_openfiles[i]->of_offset = curthread->t_filetable->ft_openfiles[i]->of_offset;
+			(*copy)->ft_openfiles[i]->of_refcount = curthread->t_filetable->ft_openfiles[i]->of_refcount;
+		}
+	}
 
 	return 0;
 }
@@ -137,7 +157,12 @@ int filetable_dup2file(int oldfd, int newfd) {
 
 void filetable_destroy(struct filetable *ft) {
 
-
+	int i;
+	for (i = 0; i < OPEN_MAX; i++) {
+		if (ft->ft_openfiles[i] != NULL) {
+			kfree(ft->ft_openfiles[i]);
+		}
+	}
 
 }
 

@@ -55,8 +55,7 @@ struct filetable {
 };
 
 /* these all have an implicit arg of the curthread's filetable */
-int filetable_init(const char *inpath, const char *outpath, 
-		   const char *errpath);
+int filetable_init(struct filetable *ft);
 int filetable_copy(struct filetable **copy);
 int filetable_placefile(struct openfile *file, int *fd);
 int filetable_findfile(int fd, struct openfile **file);

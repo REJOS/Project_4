@@ -200,6 +200,6 @@ int sys_close(int fd) {
 }
 
 
-int sys_dup2file(int oldfd, int newfd) {
+int sys_dup2(int oldfd, int newfd) {
 	return filetable_dup2file(oldfd, newfd);
 }

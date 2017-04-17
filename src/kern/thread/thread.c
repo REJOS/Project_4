@@ -93,6 +93,8 @@ thread_destroy(struct thread *thread)
 		panic("thread_destroy: pid not found\n");
 	}
 
+	filetable_destroy(curthread->t_filetable);
+
 	if (thread->t_stack) {
 		kfree(thread->t_stack);
 	}
@@ -196,6 +198,8 @@ thread_bootstrap(void)
 	}
 	
 	pid_initialize();
+
+	filetable_init(curthread->t_filetable);
 
 	/*
 	 * Create the thread structure for the first thread
