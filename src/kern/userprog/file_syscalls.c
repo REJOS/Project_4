@@ -9,19 +9,17 @@
 #include <machine/trapframe.h>
 #include <kern/unistd.h>
 #include <kern/limits.h>
-#include <kern/errno.h>
 #include <vm.h>
 #include <vfs.h>
 #include <vnode.h>
 #include <stdarg.h>
-#include <types.h>
 #include <uio.h>
 #include <synch.h>
 #include <kern/stat.h>
 
-typedef int mode_t;
 
-int sys_open(const char *path, int oflag, mode_t mode) {
+
+int sys_open(const char *path, int oflag) {
 	return 0;
 }
 

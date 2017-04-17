@@ -291,7 +291,15 @@ pid.o: ../../thread/pid.c ../../include/types.h machine/types.h \
   ../../include/kern/errno.h ../../include/array.h \
   ../../include/syscall.h machine/trapframe.h ../../include/thread.h \
   machine/pcb.h ../../include/curthread.h ../../include/synch.h
-file.o: ../../thread/file.c
+file.o: ../../thread/file.c ../../include/file.h \
+  ../../include/kern/limits.h ../../include/types.h machine/types.h \
+  ../../include/kern/types.h ../../include/synch.h ../../include/vnode.h \
+  ../../include/lib.h machine/setjmp.h ../../include/thread.h \
+  machine/pcb.h ../../include/syscall.h machine/trapframe.h \
+  ../../include/curthread.h ../../include/addrspace.h ../../include/vm.h \
+  machine/vm.h opt-dumbvm.h ../../include/kern/errno.h \
+  ../../include/kern/unistd.h ../../include/vfs.h ../../include/stdarg.h \
+  ../../include/uio.h ../../include/kern/stat.h
 main.o: ../../main/main.c ../../include/types.h machine/types.h \
   ../../include/kern/types.h ../../include/kern/errno.h \
   ../../include/kern/unistd.h ../../include/lib.h machine/setjmp.h \
@@ -323,13 +331,13 @@ proc_syscalls.o: ../../userprog/proc_syscalls.c ../../include/types.h \
   ../../include/synch.h
 file_syscalls.o: ../../userprog/file_syscalls.c ../../include/file.h \
   ../../include/kern/limits.h ../../include/types.h machine/types.h \
-  ../../include/kern/types.h ../../include/lib.h machine/setjmp.h \
-  ../../include/syscall.h machine/trapframe.h ../../include/thread.h \
-  machine/pcb.h ../../include/curthread.h ../../include/addrspace.h \
-  ../../include/vm.h machine/vm.h opt-dumbvm.h ../../include/kern/errno.h \
-  ../../include/kern/unistd.h ../../include/vfs.h ../../include/vnode.h \
-  ../../include/stdarg.h ../../include/uio.h ../../include/synch.h \
-  ../../include/kern/stat.h
+  ../../include/kern/types.h ../../include/synch.h ../../include/vnode.h \
+  ../../include/lib.h machine/setjmp.h ../../include/syscall.h \
+  machine/trapframe.h ../../include/thread.h machine/pcb.h \
+  ../../include/curthread.h ../../include/addrspace.h ../../include/vm.h \
+  machine/vm.h opt-dumbvm.h ../../include/kern/errno.h \
+  ../../include/kern/unistd.h ../../include/vfs.h ../../include/stdarg.h \
+  ../../include/uio.h ../../include/kern/stat.h
 loadelf.o: ../../userprog/loadelf.c ../../include/types.h machine/types.h \
   ../../include/kern/types.h ../../include/kern/errno.h \
   ../../include/lib.h machine/setjmp.h ../../include/uio.h \

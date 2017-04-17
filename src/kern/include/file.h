@@ -9,13 +9,16 @@
 
 #include <kern/limits.h>
 #include <types.h>
-
-struct lock;
-struct vnode;
-
-
+#include <synch.h>
+#include <vnode.h>
 
 /*** openfile section ***/
+
+enum FLAGS {
+	O_RDONLY,
+	O_WRONLY,
+	O_RDWR
+};
 
 /* 
  * openfile struct 
